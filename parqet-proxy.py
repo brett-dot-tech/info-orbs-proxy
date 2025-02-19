@@ -87,34 +87,12 @@ def transform_data(data: dict, perf, perfChart):
 
 
 def get_perf(data, perf):
-    if perf == "returnGross":
-        return data.get("returnGross", 0)
-    elif perf == "returnNet":
-        return data.get("returnNet", 0)
-    elif perf == "totalReturnGross":
-        return data.get("totalReturnGross", 0)
-    elif perf == "totalReturnNet":
-        return data.get("totalReturnNet", 0)
-    elif perf == "ttwror":
-        return data.get("ttwror", 0)
-    elif perf == "izf":
-        return data.get("izf", 0)
-    else:
-        return 0
+    return data.get(perf, 0)
 
 
 def get_perf_chart(data, perf_chart):
     values = data.get("values", {})
-    if perf_chart == "perfHistory":
-        return values.get("perfHistory", 0)
-    elif perf_chart == "perfHistoryUnrealized":
-        return values.get("perfHistoryUnrealized", 0)
-    elif perf_chart == "ttwror":
-        return values.get("ttwror", 0)
-    elif perf_chart == "drawdown":
-        return values.get("drawdown", 0)
-    else:
-        return 0
+    return values.get(perf_chart, 0)
 
 
 @app.post("/proxy")
