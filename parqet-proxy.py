@@ -42,18 +42,21 @@ async def fetch_parqet_data(url: str, payload: dict):
             raise HTTPException(status_code=502, detail=f"Proxy error: {str(e)}")
 
 
-def transform_data(data: dict, perf, perfChart):
+def transform_data(data: dict, perf, perf_chart):
     """Filters and restructures JSON to keep only specified fields."""
     filtered_data = {"holdings": [], "performance": {}, "chart": []}
 
     if "holdings" in data:
         for holding in data["holdings"]:
+            asset_type = holding.get("assetType", "").lower()
+            if asset_type not in ["security", "crypto"]:
+                continue
             is_sold = holding.get("position", {}).get("isSold")
             shares = holding.get("position", {}).get("shares")
             if is_sold or shares == 0:
                 continue
             filtered_holding = {
-                "assetType": holding.get("assetType", "").lower(),
+                "assetType": asset_type,
                 "currency": holding.get("currency"),
                 "id": holding.get("asset", {}).get("identifier"),
                 "name": holding.get("sharedAsset", {}).get("name"),
@@ -81,7 +84,7 @@ def transform_data(data: dict, perf, perfChart):
                 # skip first
                 first = False
                 continue
-            filtered_data["chart"].append(get_perf_chart(chart, perfChart))
+            filtered_data["chart"].append(get_perf_chart(chart, perf_chart))
 
     return filtered_data
 
